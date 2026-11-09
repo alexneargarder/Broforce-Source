@@ -1,0 +1,732 @@
+# Folder rules for decompile.py's placement step. Only the global-namespace types ilspycmd writes at the tree root are
+# placed, each file moved to Source/<folder>/; namespaced folders stay where ilspycmd writes them.
+# One rule per line: kind, key and folder, separated by spaces or tabs. Blank lines and lines starting with # are ignored.
+#   class   matches the type's exact name.
+#   base    matches the type or any ancestor in its base chain, the nearest ancestor's rule winning. External bases
+#           match by simple name (ScriptableObject); the chain ends at its first external base.
+#   prefix  matches the file name's leading word on a CamelCase boundary (the next character is uppercase, a digit,
+#           an underscore or the end); the longest matching prefix wins.
+# Precedence: class, then base, then prefix, else Unsorted/.
+#
+# Folders:
+#   Enemies      hostile characters: mooks, aliens, hell creatures, Satan, bosses and their parts, the NPC AI framework
+#                (PolymorphicAI, EnemyAI) with every enemy AI, and enemy-only helpers.
+#   Projectiles  bullets, rockets, grenades and thrown or fired objects, a bro's or enemy's own included, and the
+#                damaging blasts they spawn (flash bang, flame wall, ground wave).
+#   Doodads      level objects that are not terrain tiles: doors, switches, crates, traps, mines, spikes, zip lines,
+#                alarms, pickups, and the FallingBlock-based crate, hanging doodad, beehive and fire bin.
+#   Blocks       terrain tiles: Block and its descendants (cages and barrels included), their pieces and decorations,
+#                ground and terrain types.
+#   Units        the unit framework (Unit, NetworkedUnit, TestVanDammeAnim), unit-wide helpers (pathfinding, damage
+#                relays, parachutes) and neutral units: villagers, citizens, animals. Hostile units are in Enemies,
+#                playable and bro-spawned ones in Bros, vehicles in Vehicles.
+#   Bros         playable heroes: BroBase and every bro, hero types and unlocks, rescue cages' bro, each bro's own
+#                helpers, allies and special abilities.
+#   Vehicles     tanks, trucks, copters, blimps, bikes, diggers, mechs and their weapons and AI, the extraction
+#                helicopter, the Harrier jet.
+#   Players      a player's session: Player, HeroController, spawning, bot control, gestures, flex powers.
+#   Core         the object model and game-wide foundations: BroforceObject, damage and death, damage policy,
+#                startup, registry, time, instantiation, shared enums.
+#   Net          networking: NetworkObject, RPCs, sync, serialization, IDs, connection layers, lobbies,
+#                matchmaking, multiplayer chat, network debugging.
+#   Level        the running level: the map and its controller, themes, generation, checkpoints, spawn points,
+#                entry and exit portals, level-wide controllers.
+#   Editor       the in-game level editor, level-chunk tools, Unity editor gizmos and developer launch tools.
+#   WorldMap     the campaign world map: territories, missions, its helicopter, camera and effects.
+#   GameFlow     game modes and the flow around levels: mode controllers, scene loading, pause, level end, score
+#                and victory screens, intermissions, statistics.
+#   Cutscenes    cutscenes, intros, endings and credits, and their props.
+#   Menus        menu screens and their widgets: main menu, options, campaign browsers, save slots, hero select,
+#                join screens, trophy room.
+#   Hud          in-level overlays: player HUD, health and brotality bars, timers, money, on-screen text and alerts.
+#   Triggers     level triggers, their actions and action infos, and the components that fire them.
+#   Fx           transient visual effects: puffs, blood, gibs, debris, particles, decals, flashes, shakes,
+#                the effects controller.
+#   Graphics     rendering: sprites and sprite animation, textures, materials, image effects, cameras and the level
+#                camera's follow, lighting.
+#   Environment  the level's ambient world: weather, lightning, water, wind, foliage, wildlife, sky, backgrounds,
+#                parallax, fluids.
+#   Audio        sound effects, music and the announcer.
+#   Input        controllers, keyboard and input readers.
+#   Perks        Rogueforce perks, the perk shop and purchase switches, money and starting advantages.
+#   Minigames    the burger minigame.
+#   Platform     platform services: Steam, Playtomic, achievements, workshop, Alienware lighting, GIF and video
+#                capture, build-variant switches.
+#   Data         saved and file data: player progress and options, world map progress and save slots, campaign
+#                and map files, file IO; ScriptableObject assets no subsystem claims.
+#   Util         general helpers with no gameplay role: math, random, easing, extensions, singletons, logging,
+#                small transform behaviours, test and debug scripts.
+
+# --- base ---
+base    BroBase                           Bros
+base    Mook                              Enemies
+base    PolymorphicAI                     Enemies
+base    EnemyAI                           Enemies
+base    Boss                              Enemies
+base    BossPiece                         Enemies
+base    AlienSandWorm                     Enemies
+base    GenericWeapon                     Enemies
+base    TankAI                            Vehicles
+base    Tank                              Vehicles
+base    TankWeapon                        Vehicles
+base    Mech                              Vehicles
+base    MechWeapon                        Vehicles
+base    Helicopter                        Vehicles
+base    NetworkedUnit                     Units
+base    DamageRelay                       Units
+base    Drone                             Bros
+base    FollowingObject                   Bros
+base    Projectile                        Projectiles
+base    Grenade                           Projectiles
+base    FlashBangExplosion                Projectiles
+base    FlameWallExplosion                Projectiles
+base    Shrapnel                          Fx
+base    Block                             Blocks
+base    BlockPiece                        Blocks
+base    Doodad                            Doodads
+base    CheckPoint                        Level
+base    TriggerAction                     Triggers
+base    TriggerActionInfo                 Triggers
+base    CutsceneAI                        Cutscenes
+base    Menu                              Menus
+base    Button                            Menus
+base    SimpleButton                      WorldMap
+base    ConnectionLayer                   Net
+base    RoomInfo                          Net
+base    IDWrapper                         Net
+base    RPCObject                         Net
+base    ServerClientBase                  Net
+base    PDictionary                       Platform
+base    SpriteBase                        Graphics
+base    SpriteBaseMirror                  Graphics
+base    UVAnimation                       Graphics
+base    SimpleSpriteWrapper               Graphics
+base    SlinImageEffectBase               Graphics
+base    WildLife                          Environment
+base    WavyMesh                          Environment
+base    ParallaxFollow                    Environment
+base    SpriteSelectionIndicator          Editor
+base    ThreadedJob                       Util
+base    ScriptableObject                  Data
+base    SwitchWithCost                    Perks
+
+# --- prefix ---
+prefix  Alarm                             Doodads
+prefix  Alien                             Enemies
+prefix  Amplify                           Graphics
+prefix  Animated                          Graphics
+prefix  Animation                         Graphics
+prefix  Bandwidth                         Net
+prefix  Birdman                           Cutscenes
+prefix  Block                             Blocks
+prefix  Blood                             Fx
+prefix  Boss                              Enemies
+prefix  Bro                               Bros
+prefix  Brofort                           Editor
+prefix  Brotality                         Hud
+prefix  Burger                            Minigames
+prefix  Camera                            Graphics
+prefix  Campaign                          Data
+prefix  Chain                             Doodads
+prefix  CharacterCommand                  Triggers
+prefix  CharacterHolder                   Menus
+prefix  Chat                              Net
+prefix  Cloud                             Environment
+prefix  Coloured                          Menus
+prefix  Connection                        Net
+prefix  Credit                            Cutscenes
+prefix  Credits                           Cutscenes
+prefix  CustomCampaign                    Menus
+prefix  CutScene                          Cutscenes
+prefix  Cutscene                          Cutscenes
+prefix  Damage                            Core
+prefix  Death                             Core
+prefix  Debug                             Util
+prefix  Decal                             Fx
+prefix  Demonstration                     Core
+prefix  Disable                           Util
+prefix  Distortion                        Graphics
+prefix  Doodad                            Doodads
+prefix  Ease                              Util
+prefix  Easer                             Util
+prefix  Effects                           Fx
+prefix  End                               Cutscenes
+prefix  Enemy                             Enemies
+prefix  Explosion                         Fx
+prefix  Fade                              Graphics
+prefix  Fader                             Graphics
+prefix  FileExplorer                      Editor
+prefix  Final                             Cutscenes
+prefix  Fire                              Fx
+prefix  Flash                             Fx
+prefix  Flex                              Players
+prefix  Flicker                           Graphics
+prefix  Fluid                             Environment
+prefix  Follow                            Util
+prefix  FuckNet                           Net
+prefix  Gesture                           Players
+prefix  Gib                               Fx
+prefix  Gif                               Platform
+prefix  Grid                              Level
+prefix  Hanging                           Doodads
+prefix  Hero                              Players
+prefix  HeroSelect                        Menus
+prefix  Input                             Input
+prefix  Intermission                      GameFlow
+prefix  Intro                             Cutscenes
+prefix  Join                              Menus
+prefix  Keyboard                          Input
+prefix  Lerp                              Util
+prefix  Letter                            Net
+prefix  Level                             Level
+prefix  LevelChunk                        Editor
+prefix  LevelEditor                       Editor
+prefix  Light                             Graphics
+prefix  Lighting                          Graphics
+prefix  Lightning                         Environment
+prefix  Load                              Cutscenes
+prefix  Loading                           GameFlow
+prefix  Lock                              Util
+prefix  Logo                              Menus
+prefix  Look                              Doodads
+prefix  MainMenu                          Menus
+prefix  Map                               Level
+prefix  MatchMaking                       Net
+prefix  Mech                              Vehicles
+prefix  Menu                              Menus
+prefix  Mine                              Doodads
+prefix  Miniboss                          Enemies
+prefix  Mission                           WorldMap
+prefix  Mook                              Enemies
+prefix  MuscleTemple                      Fx
+prefix  Network                           Net
+prefix  Offset                            Graphics
+prefix  P                                 Platform
+prefix  Paralax                           Environment
+prefix  Parallax                          Environment
+prefix  Particle                          Fx
+prefix  Path                              Units
+prefix  Pause                             GameFlow
+prefix  Perk                              Perks
+prefix  Physics2D                         Util
+prefix  Pickup                            Doodads
+prefix  Piss                              Cutscenes
+prefix  Platform                          Platform
+prefix  Player                            Players
+prefix  Playtomic                         Platform
+prefix  Post                              Graphics
+prefix  Predabro                          Bros
+prefix  Projectile                        Projectiles
+prefix  Puff                              Fx
+prefix  QuickCapture                      Platform
+prefix  Rain                              Environment
+prefix  Release                           Perks
+prefix  Robrocop                          Bros
+prefix  RPC                               Net
+prefix  Rpc                               Net
+prefix  Satan                             Enemies
+prefix  Scale                             Util
+prefix  Screen                            Util
+prefix  Scroll                            Graphics
+prefix  Set                               Graphics
+prefix  Shake                             Fx
+prefix  Skip                              Cutscenes
+prefix  Sound                             Audio
+prefix  Spawn                             Level
+prefix  Sprite                            Graphics
+prefix  Star                              Graphics
+prefix  Starfield                         Graphics
+prefix  Steam                             Platform
+prefix  Switch                            Doodads
+prefix  Sync                              Net
+prefix  Tab                               Menus
+prefix  Take                              Util
+prefix  Tank                              Vehicles
+prefix  Terrain                           Blocks
+prefix  Territory                         WorldMap
+prefix  Terror                            WorldMap
+prefix  Terrorist                         WorldMap
+prefix  Test                              Util
+prefix  Text                              Menus
+prefix  Texture                           Graphics
+prefix  Time                              Util
+prefix  Trigger                           Triggers
+prefix  Victory                           GameFlow
+prefix  Wall                              Doodads
+prefix  Warlock                           Enemies
+prefix  Water                             Environment
+prefix  Wavy                              Environment
+prefix  Weather                           Environment
+prefix  Weeping                           Cutscenes
+prefix  Wind                              Environment
+prefix  WM                                WorldMap
+prefix  Workshop                          Platform
+prefix  World                             WorldMap
+prefix  Zipline                           Doodads
+
+# --- class ---
+# Enemies
+class   ActionObject                      Enemies
+class   DoorOfGuns                        Enemies
+class   ForcefieldElectricity             Enemies
+class   LaserBeam                         Enemies
+class   LaserBeamVisuals                  Enemies
+class   LostSoulScream                    Enemies
+class   MentalState                       Enemies
+class   QueueMode                         Enemies
+class   ScoutMookInterestPoint            Enemies
+class   StepOnMookPlatform                Enemies
+# Projectiles
+class   DecoyHologram                     Projectiles
+class   ExplosionGroundWave               Projectiles
+class   FlashBangPoint                    Projectiles
+class   GrenadeSwallowTrigger             Projectiles
+class   TankbroBazookaBlast               Projectiles
+class   ThrowingKnifeEmbedded             Projectiles
+class   TrailType                         Projectiles
+# Doodads
+class   Bouncy                            Doodads
+class   CarTire                           Doodads
+class   CrateReactionToBeingShot          Doodads
+class   DeadManSwitchAlarmTrap            Doodads
+class   DoodadBeehive                     Doodads
+class   DoodadCrate                       Doodads
+class   DoodadHanging                     Doodads
+class   FireBinDoodad                     Doodads
+class   GeneratePole                      Doodads
+class   GunStack                          Doodads
+class   HiddenExplosives                  Doodads
+class   OilAccidentTicker                 Doodads
+class   Pickupable                        Doodads
+class   PickupableController              Doodads
+class   RealisticAngryBeeSimulator        Doodads
+class   RollingBarrel                     Doodads
+class   SeeSawTop                         Doodads
+class   SlideDownOnStep                   Doodads
+class   SwitchesController                Doodads
+class   TelephoneTransfomerBox            Doodads
+class   Television                        Doodads
+class   TorturedVillager                  Doodads
+class   WashingLineHangingItem            Doodads
+class   ZipLine                           Doodads
+# Blocks
+class   AlienEggListener                  Blocks
+class   AssMouthTransportWrapper          Blocks
+class   BoneDressing                      Blocks
+class   BrazierFire                       Blocks
+class   BridgeUnderPiece                  Blocks
+class   CageBar                           Blocks
+class   GroundType                        Blocks
+class   HideChildrenWhenBroNearby         Blocks
+class   QuicksandController               Blocks
+class   RoofScaffolding                   Blocks
+class   StupidArial                       Blocks
+class   TentSquisher                      Blocks
+# Units
+class   ActionState                       Units
+class   ActivateUnitWhenOnScreen          Units
+class   AnimalAI                          Units
+class   CitizenAI                         Units
+class   FollowerMinion                    Units
+class   InvulnerabilityFlash              Units
+class   KillData                          Units
+class   NavPath                           Units
+class   Parachute                         Units
+class   PathfindingController             Units
+class   VillagerAI                        Units
+# Bros
+class   BillyMode                         Bros
+class   DoubleBroSevenSpecialType         Bros
+class   ElectricZap                       Bros
+class   HeroType                          Bros
+class   HeroUnlockController              Bros
+class   Neuraliser                        Bros
+class   PockettedSpecialAmmoType          Bros
+class   RemoteControlExplosiveCar         Bros
+class   ReplicateSprite                   Bros
+class   RescueBro                         Bros
+class   ReviveBlast                       Bros
+class   SpecialAbilitiesController        Bros
+class   SuicideBro                        Bros
+class   TankBroTank                       Bros
+class   TankBroTankTurret                 Bros
+class   WhipState                         Bros
+# Vehicles
+class   CamophlageHolder                  Vehicles
+class   GoliathMechAI                     Vehicles
+class   HarrierJet                        Vehicles
+class   HelicopterLadder                  Vehicles
+class   KopterPattern                     Vehicles
+class   MammothKopterAI                   Vehicles
+class   MammothTankPolyAI                 Vehicles
+class   MookArtilleryTruckPolyAI          Vehicles
+class   MookBlimpAI                       Vehicles
+class   MookDumpTruckAI                   Vehicles
+class   MookGunplacementAI                Vehicles
+class   MookMotorBikePolyAI               Vehicles
+class   MookopterPolyAI                   Vehicles
+class   MookTruckPolyAI                   Vehicles
+class   MookVehicleDigger                 Vehicles
+class   RotateRotor                       Vehicles
+class   Rotors                            Vehicles
+class   TankHatch                         Vehicles
+class   TankPolyAI                        Vehicles
+class   VehicleType                       Vehicles
+class   Wheel                             Vehicles
+# Players
+class   BotBrain                          Players
+class   ButtonMash                        Players
+class   CharacterUI                       Players
+class   ExplodingHeartCountDown           Players
+class   ImprovedGestureSystem             Players
+class   PilotUI                           Players
+# Core
+class   BroforceObject                    Core
+class   DamagePolicy                      Core
+class   DirectionEnum                     Core
+class   EventHandler                      Core
+class   Info                              Core
+class   InstantiationController           Core
+class   PolicyType                        Core
+class   Registry                          Core
+class   Startup                           Core
+class   TargetableObject                  Core
+class   TimeController                    Core
+class   VersionNumber                     Core
+# Net
+class   Ack                               Net
+class   Analytics                         Net
+class   AutoComplete                      Net
+class   CanvasController                  Net
+class   Caret                             Net
+class   Config                            Net
+class   Connect                           Net
+class   ConnectInfo                       Net
+class   ControlMessage                    Net
+class   CryptoKeyWrapper                  Net
+class   DaisyWheel                        Net
+class   DebugLobby                        Net
+class   GameWorldInfoDebug                Net
+class   GeneralPeer                       Net
+class   GetIpData                         Net
+class   HideInOfflineMode                 Net
+class   InGameInspector                   Net
+class   ListsDebug                        Net
+class   Lobby                             Net
+class   MessageController                 Net
+class   MessageInfo                       Net
+class   NetworkSettings                   Net
+class   NewChatController                 Net
+class   NID                               Net
+class   NullWrapper                       Net
+class   OnStart                           Net
+class   ParentedPosition                  Net
+class   PID                               Net
+class   PingController                    Net
+class   Pingvisualization                 Net
+class   PlayerConnectionInfo              Net
+class   SerializationMethod               Net
+class   ShowIDs                           Net
+class   SID                               Net
+class   SingletonNetObj                   Net
+class   SmoothSyncingTest                 Net
+class   State                             Net
+class   Syncronize                        Net
+class   TabScreen                         Net
+class   TurnOffNetworkLayer               Net
+class   TwoWayPeer                        Net
+class   TypeSerializer                    Net
+class   UnityStream                       Net
+# Level
+class   ChanceToAppear                    Level
+class   ChanceToSpawn                     Level
+class   ExplodingWorld                    Level
+class   FlagFlap                          Level
+class   HellEndPortal                     Level
+class   HeroLevelEnterPortal              Level
+class   HeroLevelExitPortal               Level
+class   HeroPortalVisuals                 Level
+class   HeroTransport                     Level
+class   HeroTransportBase                 Level
+class   HideTerrain                       Level
+class   MapGenerationController           Level
+class   MapGeneratorConfig                Level
+class   PersistentBlocks                  Level
+class   SharedLevelObjectsHolder          Level
+class   SometimesSpawn                    Level
+class   SpinAndScaleDown                  Level
+class   ThemeHolder                       Level
+class   ToggleVisibilityPerDifficulty     Level
+# Editor
+class   ChunkGizmo                        Editor
+class   CustomEditorTest                  Editor
+class   DisappearInPlayMode               Editor
+class   DoodadPreview                     Editor
+class   EditorMode                        Editor
+class   FixReferecesUtility               Editor
+class   GeneratedMapGizmo                 Editor
+class   HideSpriteInPlayMode              Editor
+class   InspectorSearchTest               Editor
+class   QuickLauncher                     Editor
+class   QuicklaunchMode                   Editor
+class   SelectionIndicator                Editor
+class   ShowMouseController               Editor
+class   TextField                         Editor
+# WorldMap
+class   GeneralUI                         WorldMap
+class   Helicopter2D                      WorldMap
+class   Helicopter3D                      WorldMap
+class   HelicopterUpgradeType             WorldMap
+class   HellPortal                        WorldMap
+class   HellPortalLightning               WorldMap
+class   MeshTriangle                      WorldMap
+class   WorldMapWavyGrass                 WorldMap
+class   ZoomIn                            WorldMap
+# GameFlow
+class   BadgeHolder                       GameFlow
+class   CollapsingDeathmatchLevel         GameFlow
+class   GameMode                          GameFlow
+class   GameModeController                GameFlow
+class   GameState                         GameFlow
+class   HeroDeathCounter                  GameFlow
+class   LevelOverScreen                   GameFlow
+class   LevelResult                       GameFlow
+class   LevelSelectionController          GameFlow
+class   LevelStats                        GameFlow
+class   MookDeathCounter                  GameFlow
+class   PlayerCard                        GameFlow
+class   PlayerScoreDisplay                GameFlow
+class   RaceModeController                GameFlow
+class   ScoreScreen                       GameFlow
+class   StatisticsController              GameFlow
+class   VictoryBroDeath                   GameFlow
+class   VictoryMookDeath                  GameFlow
+# Cutscenes
+class   AlienBossReveal                   Cutscenes
+class   AltEnding                         Cutscenes
+class   ChangeCutsceneSpeed               Cutscenes
+class   CutsceneIntroData                 Cutscenes
+class   DevolverGrow                      Cutscenes
+class   DickController                    Cutscenes
+class   FastForwardCutscene               Cutscenes
+class   GraveUrinationController          Cutscenes
+class   InterfaceCameraShake              Cutscenes
+class   MookCaptainCutscene               Cutscenes
+class   SatanHeliCutscene                 Cutscenes
+class   SkippableCutsceneControl          Cutscenes
+class   Text3D                            Cutscenes
+class   TFBGIntro                         Cutscenes
+class   TombstoneColour                   Cutscenes
+class   UrineParticle                     Cutscenes
+# Menus
+class   AutoScroll                        Menus
+class   BrowseCampaigns                   Menus
+class   BulletPoint                       Menus
+class   BulletPointsBar                   Menus
+class   CampaignMode                      Menus
+class   DisplayVersionNumber              Menus
+class   FullScreenRightClick              Menus
+class   GlowPingText                      Menus
+class   HeroSelector                      Menus
+class   LerpWorldIn                       Menus
+class   MakeOnlineMenu                    Menus
+class   MatchMakingMenu                   Menus
+class   MountainOfBrosController          Menus
+class   NewCustomCampaignMenu             Menus
+class   NewHeroSelectController           Menus
+class   NewHeroSelectController1          Menus
+class   OnlineOrOfflineMenu               Menus
+class   PlayerInfo                        Menus
+class   PlayerJoinHolder                  Menus
+class   SaveSlotUI                        Menus
+class   SearchBar                         Menus
+class   SelectChecker                     Menus
+class   SideBarEntry                      Menus
+class   SpacedList                        Menus
+class   TrophyRoomController              Menus
+class   UnlockDisplay                     Menus
+# Hud
+class   ArrowCamera                       Hud
+class   Brotalitometer                    Hud
+class   FlashingText                      Hud
+class   HealthBar                         Hud
+class   HUDHeadGear                       Hud
+class   HudText                           Hud
+class   InfoBar                           Hud
+class   LevelTimer                        Hud
+class   LevelTitle                        Hud
+class   MookAlertIcon                     Hud
+class   MookAlertLevelIndicator           Hud
+class   PlayerDollarsText                 Hud
+class   PlayerHUD                         Hud
+class   Plus1Text                         Hud
+class   TopTextDisplay                    Hud
+class   WaitingForOthersHUD               Hud
+# Triggers
+class   AirdropTriggerDoodad              Triggers
+class   AlienTriggerSpawnDoodad           Triggers
+class   BombardmentDoodad                 Triggers
+class   BombardmentRepeat                 Triggers
+class   CallSandwormDoodad                Triggers
+class   LevelEventActionType              Triggers
+class   ParadropDooadad                   Triggers
+class   SnapCameraMoveAction              Triggers
+class   SystemActionType                  Triggers
+class   UndeadMooksDoodad                 Triggers
+# Fx
+class   AutoDestroyParticleEffect         Fx
+class   BackgroundBloodSpray              Fx
+class   EmberSpawner                      Fx
+class   FaderSpriteBroveHeart             Fx
+class   FullScreenFlashEffect             Fx
+class   HeatWaveSpawner                   Fx
+class   HighlightFlare                    Fx
+class   LetterTween                       Fx
+class   ReactionBubble                    Fx
+class   ScriptedShake                     Fx
+class   SkeletonGibs                      Fx
+class   SlimeGroundCover                  Fx
+class   SmokeEmitter                      Fx
+class   SpringShake                       Fx
+class   Viscera                           Fx
+class   Wobble                            Fx
+# Graphics
+class   AlphaFlicker                      Graphics
+class   AssMouthDistortionEffect          Graphics
+class   BillBoard                         Graphics
+class   ColorBlender                      Graphics
+class   ColorShiftController              Graphics
+class   CreateDropShadow                  Graphics
+class   CustomLineRenderer                Graphics
+class   DisplacementCamera                Graphics
+class   EnableCameraDepthInForward        Graphics
+class   FinalCamera                       Graphics
+class   ForceVertexColourUpdate           Graphics
+class   FrameratePostFX                   Graphics
+class   GrowOnVisible                     Graphics
+class   HeatHaze                          Graphics
+class   InterferenceEffect                Graphics
+class   LetterBoxController               Graphics
+class   OilController                     Graphics
+class   PlayAnimSpeed                     Graphics
+class   RandomLowerLeftPixel              Graphics
+class   ResizeForAspectRatio              Graphics
+class   ScalingBox                        Graphics
+class   ScreenResolution                  Graphics
+class   ScrollingSprite                   Graphics
+class   SnapShot                          Graphics
+class   SoftNormalsToVertexColor          Graphics
+class   SortOfFollow                      Graphics
+class   TVGlitchAnimator                  Graphics
+class   UVAnimation_Multi                 Graphics
+class   ZoomInCamera                      Graphics
+# Environment
+class   AlienWindSack                     Environment
+class   AnimateDenizen                    Environment
+class   BrodownSun                        Environment
+class   CoconutSpawner                    Environment
+class   DamageableScenery                 Environment
+class   DeadlySandstorm                   Environment
+class   DrawInfo                          Environment
+class   FluidThread                       Environment
+class   HellBuildingAnimation             Environment
+class   MurderOfSeagulls                  Environment
+class   Panning                           Environment
+class   PanningStuff                      Environment
+class   ParticlesWind                     Environment
+class   RainingDenizen                    Environment
+class   RealisticFlySimulatorClass        Environment
+class   SpawnFireFlies                    Environment
+class   SunController                     Environment
+class   TreeFoliage                       Environment
+class   Vegetation                        Environment
+# Audio
+class   AmbienceType                      Audio
+class   Announcer                         Audio
+class   BossMusicType                     Audio
+class   FadeMusicOnStart                  Audio
+class   MusicType                         Audio
+class   PlaySoundOnAwake                  Audio
+class   ReusableOneShotSound              Audio
+class   SpatialSound                      Audio
+# Input
+class   DemoScript                        Input
+class   RewiredInputManagerSpawner        Input
+class   UiInput                           Input
+# Perks
+class   CollapseAfterReleasedPerk         Perks
+class   MookDropMoneyEffect               Perks
+class   MookDropMoneyOnDeath              Perks
+class   PlayerInventory                   Perks
+class   ScaleFlashBangExplosionWithPerks  Perks
+class   ScaleProjectileWithPerks          Perks
+class   SelectStartingAdvantage           Perks
+class   ShopZoomArea                      Perks
+# Platform
+class   AlienFXControllerManaged          Platform
+class   BetaOrNotObjectSwitcher           Platform
+class   CamRenderOrder                    Platform
+class   CaptureTheGIF1                    Platform
+class   CaptureTheGIF_2                   Platform
+class   DifficultyWorkshopTag             Platform
+class   GameplayWorkshopTag               Platform
+class   GlobalGifSaving                   Platform
+class   MakeGIFScript                     Platform
+class   OnQuickCaptureOutputReady         Platform
+class   OutOfDateObject                   Platform
+class   PersistentOverlaySystemDialog     Platform
+class   RemoteOperationStatus             Platform
+# Data
+class   CLZF2                             Data
+class   FileIO                            Data
+class   MapData                           Data
+class   PlayerOptions                     Data
+class   PlayerProgress                    Data
+class   TerritoryProgress                 Data
+class   WorldMapProgress                  Data
+class   WorldMapProgressSaveSlot          Data
+class   WorldMapTerrainSaveInfo           Data
+# Util
+class   AcidDebugShooter                  Util
+class   AnchorObjectToScreen              Util
+class   Autodestruct                      Util
+class   Bob                               Util
+class   BoolArray                         Util
+class   BouncingDots                      Util
+class   BubbleTest                        Util
+class   ClampToScreenSide                 Util
+class   ClickExplosion                    Util
+class   Colors                            Util
+class   DataCube                          Util
+class   DeveloperConsole                  Util
+class   Dood                              Util
+class   DrawThings                        Util
+class   EnableRandomChildObject           Util
+class   EnableScript                      Util
+class   ExampleScript                     Util
+class   Extensions                        Util
+class   FaceCamera                        Util
+class   FindDisable                       Util
+class   FlipRandomXScale                  Util
+class   ForceZPosition                    Util
+class   GameObjectUtils                   Util
+class   GLDrawLine                        Util
+class   HUDFPS                            Util
+class   LogStream                         Util
+class   Math                              Util
+class   MoveSlowly                        Util
+class   NonDeterministicRandom            Util
+class   ObjectRotate                      Util
+class   Platformer                        Util
+class   PositionAtEdgeOfScreen            Util
+class   Randomf                           Util
+class   SatanTest                         Util
+class   SceneObject                       Util
+class   Singleton                         Util
+class   SingletonMono                     Util
+class   SkinTest                          Util
+class   Tools                             Util
+class   TweenLetter                       Util
+class   TypewriterText                    Util
+class   Useful                            Util
+class   Utils                             Util

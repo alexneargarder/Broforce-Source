@@ -1,0 +1,7 @@
+Source/**
+!Source/**/
+!Source/**/AGENTS.md
+obj/
+bin/
+.vs/
+CLAUDE*.md

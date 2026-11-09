@@ -1,0 +1,53 @@
+#!/bin/sh
+# Push guard. The remote whose URL is in the local git config key
+# pushguard.giteaUrl accepts any push. Every other remote gets no branch named
+# decompiled* and no ref at a local decompiled* tip, refuses deleting
+# refs/heads/master, and accepts only refs/heads/master, and only when the
+# pushed tree holds no .cs or .il file (case-insensitive).
+
+url=$2
+gitea=$(git config --get pushguard.giteaUrl 2>/dev/null)
+if [ -n "$gitea" ] && [ "$url" = "$gitea" ]; then
+    exit 0
+fi
+local_only=$(git for-each-ref --format='%(objectname)' 'refs/heads/decompiled*')
+
+status=0
+
+refuse() {
+    printf 'pre-push: refusing %s: %s\n' "$1" "$2" >&2
+    status=1
+}
+
+# A refspec can rename the target (decompiled:other, HEAD:other), so match the tip too.
+pushes_local_only() {
+    case $1 in *[!0]*) ;; *) return 1 ;; esac
+    case $2 in refs/heads/decompiled*) return 0 ;; esac
+    printf '%s\n' "$local_only" | grep -q -x "$1"
+}
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+    [ -n "$local_ref" ] || continue
+    if pushes_local_only "$local_sha" "$remote_ref"; then
+        refuse "$remote_ref" "decompiled* branches go only to the pushguard.giteaUrl remote"
+        continue
+    fi
+    if [ "$remote_ref" != "refs/heads/master" ]; then
+        refuse "$remote_ref" "not refs/heads/master"
+        continue
+    fi
+    case $local_sha in
+        *[!0]*) ;;
+        *) refuse "$remote_ref" "delete"; continue ;;
+    esac
+    if ! tree=$(git ls-tree -r --name-only "$local_sha" 2>/dev/null); then
+        refuse "$remote_ref" "cannot list the tree of $local_sha"
+        continue
+    fi
+    bad=$(printf '%s\n' "$tree" | grep -E -i -m 1 '\.(cs|il)"?$')
+    if [ -n "$bad" ]; then
+        refuse "$remote_ref" "tree holds $bad"
+    fi
+done
+
+exit $status
