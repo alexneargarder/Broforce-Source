@@ -77,7 +77,7 @@ The root `AGENTS.md` has the rules for working in the generated tree and for sea
 
 ## Push guard
 
-If your copy of this repo has decompiled output committed, for example on a private branch, you can use `hooks/pre-push`, a git pre-push hook. It allows any push to the remote whose URL matches the git config key `pushguard.giteaUrl`. To any other remote it refuses to push a branch whose name starts with `decompiled`, or any other ref at the same commit as one. Apart from that, it only allows a push to `master` there, and only when the pushed commit's tree has no `.cs` or `.il` files (the extension check is case-insensitive). Everything else is refused, including pushes to other branches and deleting `master`.
+If your copy of this repo has decompiled output committed, for example on a private branch, you can use `hooks/pre-push`, a git pre-push hook. It allows any push to the remote whose URL matches the git config key `pushguard.giteaUrl`. Any other remote only gets pushes to `master`, and only when the pushed commit has no `.cs` or `.il` file in its history. Deleting `master` there is refused too.
 
 To install it, run this from the repo root:
 
